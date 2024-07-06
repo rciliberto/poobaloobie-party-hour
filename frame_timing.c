@@ -21,15 +21,11 @@ typedef struct FrameData {
 /** Global struct for tracking frame data */
 static frame_data_t frame_data = {};
 
-/** Frame data calculation at start of frame */
-void frame_calculation_start() {
+/** Frame data calculation at end of frame */
+void frame_calculation_update() {
     frame_data.now = os_get_current_time_in_seconds();
     frame_data.delta_t = frame_data.now - frame_data.last_time;
     frame_data.last_time = frame_data.now;
-}
-
-/** Frame data calculation at end of frame */
-void frame_calculation_end() {
     frame_data.seconds_counter += frame_data.delta_t;
     frame_data.frame_count += 1;
     if (frame_data.seconds_counter > 1.0) {
@@ -38,6 +34,3 @@ void frame_calculation_end() {
         frame_data.frame_count = 0;
     }
 }
-
-
-

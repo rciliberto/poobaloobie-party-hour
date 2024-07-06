@@ -9,7 +9,6 @@ int entry(int argc, char **argv) {
     window.clear_color = hex_to_rgba(0x6495EDff);
 
     while (!window.should_close) {
-        frame_calculation_start();
         reset_temporary_storage();
         os_update();
 
@@ -19,7 +18,7 @@ int entry(int argc, char **argv) {
         draw_rect_xform(hammer_xform, v2(.5f, .5f), COLOR_RED);
 
         gfx_update();
-        frame_calculation_end();
+        frame_calculation_update();
     }
 
     return 0;
