@@ -20,7 +20,7 @@ void window_update_start() {
     draw_frame.view = m4_make_scale(v3(1.0/zoom, 1.0/zoom, 1.0));
 }
 
-void window_update_delta(float64 delta_t) {
+void draw_background() {
     if (window.width / window.height > ASPECT_RATIO) {
         draw_image(background_image, v2(window.height * -0.5 * ASPECT_RATIO,window.height * -0.5), v2(window.height * ASPECT_RATIO, window.height), COLOR_WHITE);
     } else {

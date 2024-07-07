@@ -34,10 +34,9 @@ s32 frame_count;
 
 /**
  * Log fps every second
- * @param delta_t Time since last frame
  */
-void log_fps(const float64 delta_t) {
-    seconds_counter += delta_t;
+void log_fps() {
+    seconds_counter += frame_data.delta_t;
     frame_count += 1;
     if (seconds_counter > 1.0) {
         log("fps: %i", frame_count);
