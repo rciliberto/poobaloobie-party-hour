@@ -9,16 +9,18 @@ LifecycleCallback lifecycle_init_callbacks[] = {
 
 LifecycleCallback lifecycle_update_begin_callbacks[] = {
     reset_temporary_storage,
+    window_update_start,
+    frame_calculation_update,
     os_update,
 };
 
 UpdateDeltaCallback lifecycle_update_delta_callbacks[] = {
     log_fps,
+    window_update_delta
 };
 
 LifecycleCallback lifecycle_update_end_callbacks[] = {
     gfx_update,
-    frame_calculation_update,
 };
 
 void lifecycle_init() {
