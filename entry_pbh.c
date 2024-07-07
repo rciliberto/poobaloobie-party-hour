@@ -6,11 +6,11 @@ int entry(int argc, char **argv) {
 
     while (!window.should_close) {
         reset_temporary_storage();
-        frame_update();
-        frame_data_calculation();
+        window_frame_update();
+        frame_data_calculate();
         os_update();
 
-        draw_background();
+        window_draw_background();
 
         Matrix4 hammer_xform = m4_scalar(1.0);
         hammer_xform         = m4_rotate_z(hammer_xform, frame_data.now);
@@ -18,7 +18,7 @@ int entry(int argc, char **argv) {
         draw_rect_xform(hammer_xform, v2(50, 50), COLOR_RED);
 
         gfx_update();
-        log_fps();
+        frame_data_log_fps();
     }
 
     return 0;

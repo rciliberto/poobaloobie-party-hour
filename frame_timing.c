@@ -18,7 +18,7 @@ static frame_data_t frame_data = {};
 /**
  * Frame data calculation at end of frame
  */
-void frame_data_calculation() {
+void frame_data_calculate() {
     frame_data.now = os_get_current_time_in_seconds();
     frame_data.delta_t = frame_data.now - frame_data.last_time;
     frame_data.last_time = frame_data.now;
@@ -35,7 +35,7 @@ s32 frame_count;
 /**
  * Log fps every second
  */
-void log_fps() {
+void frame_data_log_fps() {
     seconds_counter += frame_data.delta_t;
     frame_count += 1;
     if (seconds_counter > 1.0) {
