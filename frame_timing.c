@@ -18,7 +18,7 @@ static frame_data_t frame_data = {};
 /**
  * Frame data calculation at end of frame
  */
-void frame_calculation_update() {
+void frame_data_calculation() {
     frame_data.now = os_get_current_time_in_seconds();
     frame_data.delta_t = frame_data.now - frame_data.last_time;
     frame_data.last_time = frame_data.now;

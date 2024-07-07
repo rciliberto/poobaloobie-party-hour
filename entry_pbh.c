@@ -6,8 +6,8 @@ int entry(int argc, char **argv) {
 
     while (!window.should_close) {
         reset_temporary_storage();
-        window_update_start();
-        frame_calculation_update();
+        frame_update();
+        frame_data_calculation();
         os_update();
 
         draw_background();
