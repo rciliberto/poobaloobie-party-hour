@@ -268,7 +268,7 @@ RECENT REVISION HISTORY:
 // test; if not, the generic C versions are used as a fall-back. On ARM targets,
 // the typical path is to have separate builds for NEON and non-NEON devices
 // (at least this is true for iOS and Android). Therefore, the NEON support is
-// toggled by a build flag: define STBI_NEON to get NEON loops.
+// toggled by a build_config flag: define STBI_NEON to get NEON loops.
 //
 // If for some reason you do not want to use any of SIMD code, or if
 // you have issues compiling it, you can disable it entirely by
@@ -717,7 +717,7 @@ typedef unsigned char validate_uint32[sizeof(stbi__uint32)==4 ? 1 : -1];
 // See https://github.com/nothings/stb/issues/81 for more information.
 //
 // So default to no SSE2 on 32-bit MinGW. If you've read this far and added
-// -mstackrealign to your build settings, feel free to #define STBI_MINGW_ENABLE_SSE2.
+// -mstackrealign to your build_config settings, feel free to #define STBI_MINGW_ENABLE_SSE2.
 #define STBI_NO_SIMD
 #endif
 
@@ -2004,7 +2004,7 @@ static int stbi__build_huffman(stbi__huffman *h, int *count)
 {
    int i,j,k=0;
    unsigned int code;
-   // build size list for each symbol (from JPEG spec)
+   // build_config size list for each symbol (from JPEG spec)
    for (i=0; i < 16; ++i) {
       for (j=0; j < count[i]; ++j) {
          h->size[k++] = (stbi_uc) (i+1);
@@ -2030,7 +2030,7 @@ static int stbi__build_huffman(stbi__huffman *h, int *count)
    }
    h->maxcode[j] = 0xffffffff;
 
-   // build non-spec acceleration table; 255 is flag for not-accelerated
+   // build_config non-spec acceleration table; 255 is flag for not-accelerated
    memset(h->fast, 255, 1 << FAST_BITS);
    for (i=0; i < k; ++i) {
       int s = h->size[i];
@@ -2045,7 +2045,7 @@ static int stbi__build_huffman(stbi__huffman *h, int *count)
    return 1;
 }
 
-// build a table that decodes both magnitude and value of small ACs in
+// build_config a table that decodes both magnitude and value of small ACs in
 // one go.
 static void stbi__build_fast_ac(stbi__int16 *fast_ac, stbi__huffman *h)
 {

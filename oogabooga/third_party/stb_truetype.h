@@ -23,7 +23,7 @@
 //        hinting? (no longer patented)
 //        cleartype-style AA?
 //        optimize: use simple memory allocator for intermediates
-//        optimize: build edge-list directly from curves
+//        optimize: build_config edge-list directly from curves
 //        optimize: rasterize directly from curves?
 //
 // ADDITIONAL CONTRIBUTORS
