@@ -18,6 +18,7 @@ Gfx_Image *entity_gfx[MAX_ENTITY_TYPES];
  * An entity that can be rendered into the scene
  */
 typedef struct Entity {
+    bool valid;
     EntityType type;
     Vector2 position;
     Vector2 size;
@@ -41,31 +42,6 @@ void init_entity_gfx() {
         entity_gfx[i] = load_image_from_disk(STR(image_uris[i]), allocator);
         assert(entity_gfx[i], "Failed to load asset from disk %s", image_uris[i]);
     }
-}
-
-/**
- * Allocate and initialize an entity.
- * @param type The type of entity to allocate
- * @param position The position of the entity
- * @param size The size of the entity
- * @param visible Whether the entity is visible in the scene
- * @return Pointer to allocated entity
- */
-Entity *alloc_entity(const EntityType type, const Vector2 position, const Vector2 size, const bool visible) {
-    Entity *entity = alloc(get_heap_allocator(), sizeof(Entity));
-    entity->type = type;
-    entity-> position = position;
-    entity->size = size;
-    entity->visible = visible;
-    return entity;
-}
-
-/**
- * Deallocate an entity.
- * @param entity The entity to deallocate.
- */
-void dealloc_entity(Entity *entity) {
-    if (entity) dealloc(get_heap_allocator(), entity);
 }
 
 /**

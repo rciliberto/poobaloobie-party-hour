@@ -3,7 +3,7 @@
 typedef struct Scene {
     /** image used for the background of the scene */
     Gfx_Image *background_image;
-    Entity *entities[MAX_SCENE_ENTITIES];
+    Entity entities[MAX_SCENE_ENTITIES];
 } Scene;
 
 /**
@@ -25,7 +25,7 @@ void scene_draw_background(const Scene *scene) {
  */
 void scene_draw_entities(const Scene *scene) {
     for (int i = 0; i < MAX_SCENE_ENTITIES; i++) {
-        if (scene->entities[0] == NULL) return;
-        draw_entity(scene->entities[i]);
+        if (&scene->entities[0] == NULL) return;
+        draw_entity(&scene->entities[i]);
     }
 }

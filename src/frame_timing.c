@@ -24,24 +24,10 @@ void frame_data_calculate() {
     frame_data.last_time = frame_data.now;
 }
 
-
-#if CONFIGURATION != RELEASE
-/** Time since last full second */
-float64 seconds_counter;
-
-/** number of frames in the past second */
-s32 frame_count;
-
 /**
- * Log fps every second
+ * Log fps to the console
  */
 void frame_data_log_fps() {
-    seconds_counter += frame_data.delta_t;
-    frame_count += 1;
-    if (seconds_counter > 1.0) {
-        log_info("fps: %i", frame_count);
-        seconds_counter = 0.0;
-        frame_count = 0;
-    }
+    log_info("Frame Time: %.2f ms", frame_data.delta_t * 1000);
+    log_info("Frame Rate: %.2f fps", 1.0/frame_data.delta_t);
 }
-#endif
