@@ -77,5 +77,8 @@ void draw_entity(const Entity *entity) {
         return;
     }
 
-    draw_image(entity_gfx[entity->type], entity->position, entity->size, COLOR_WHITE);
+    Matrix4 xform = m4_scalar(1.0);
+    xform         = m4_rotate_z(xform, frame_data.now);
+    xform         = m4_translate(xform, v3(entity->position.x, entity->position.y, 0));
+    draw_image_xform(entity_gfx[entity->type], xform, entity->size, COLOR_WHITE);
 }

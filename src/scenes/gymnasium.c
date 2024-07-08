@@ -17,6 +17,6 @@ void init_gymnasium_scene(Scene *scene) {
         scene->entities[i] = NULL;
     }
 
-    scene->entities[0] = alloc_entity(poobaloobie, v2(0, 0), v2(100,100), true);
+    scene->entities[0] = alloc_entity(poobaloobie, v2(-250, -250), v2(500,500), true);
 }
 

@@ -21,10 +21,6 @@ int entry(int argc, char **argv) {
         scene_draw_background(&scene);
         scene_draw_entities(&scene);
 
-        Matrix4 hammer_xform = m4_scalar(1.0);
-        hammer_xform         = m4_rotate_z(hammer_xform, frame_data.now);
-        hammer_xform         = m4_translate(hammer_xform, v3(-25, -25, 0));
-        draw_rect_xform(hammer_xform, v2(50, 50), COLOR_RED);
 
         gfx_update();
 
