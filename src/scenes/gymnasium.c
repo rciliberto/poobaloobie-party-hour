@@ -5,7 +5,7 @@ Gfx_Image *gymnasium_background;
  * @param scene The scene pointer to initialize with gymnasium data.
  */
 void init_gymnasium_scene(Scene *scene) {
-    if (!gymnasium_background) {
+    if (gymnasium_background == NULL) {
         gymnasium_background = load_image_from_disk(STR("assets/dev_background.png"), get_heap_allocator());
         assert(gymnasium_background, "Gymnasium background image failed to load");
     }

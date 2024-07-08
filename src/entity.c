@@ -73,7 +73,7 @@ void dealloc_entity(Entity *entity) {
  * @param entity The entity to draw
  */
 void draw_entity(const Entity *entity) {
-    if (!entity || !entity->visible) {
+    if (entity == NULL || !entity->visible) {
         return;
     }
 

@@ -25,7 +25,7 @@ void scene_draw_background(const Scene *scene) {
  */
 void scene_draw_entities(const Scene *scene) {
     for (int i = 0; i < MAX_SCENE_ENTITIES; i++) {
-        if (!scene->entities[0]) return;
+        if (scene->entities[0] == NULL) return;
         draw_entity(scene->entities[i]);
     }
 }
