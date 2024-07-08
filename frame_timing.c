@@ -10,10 +10,10 @@ typedef struct FrameData {
 
     /** Delta time between frames */
     float64 delta_t;
-} frame_data_t;
+} FrameData;
 
 /** Global struct for tracking frame data */
-static frame_data_t frame_data = {};
+static FrameData frame_data = {};
 
 /**
  * Frame data calculation at end of frame
@@ -25,7 +25,7 @@ void frame_data_calculate() {
 }
 
 
-
+#if CONFIGURATION != RELEASE
 /** Time since last full second */
 float64 seconds_counter;
 
@@ -39,8 +39,9 @@ void frame_data_log_fps() {
     seconds_counter += frame_data.delta_t;
     frame_count += 1;
     if (seconds_counter > 1.0) {
-        log("fps: %i", frame_count);
+        log_info("fps: %i", frame_count);
         seconds_counter = 0.0;
         frame_count = 0;
     }
 }
+#endif

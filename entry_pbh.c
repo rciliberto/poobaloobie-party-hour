@@ -1,8 +1,16 @@
 #include "window.c"
 #include "frame_timing.c"
+#include "entity.c"
+#include "scene.c"
+#include "scenes/gymnasium.c"
+
+Scene scene;
 
 int entry(int argc, char **argv) {
     window_init();
+
+    init_entity_gfx();
+    init_gymnasium_scene(&scene);
 
     while (!window.should_close) {
         reset_temporary_storage();
@@ -10,7 +18,8 @@ int entry(int argc, char **argv) {
         frame_data_calculate();
         os_update();
 
-        window_draw_background();
+        scene_draw_background(&scene);
+        scene_draw_entities(&scene);
 
         Matrix4 hammer_xform = m4_scalar(1.0);
         hammer_xform         = m4_rotate_z(hammer_xform, frame_data.now);
@@ -18,7 +27,11 @@ int entry(int argc, char **argv) {
         draw_rect_xform(hammer_xform, v2(50, 50), COLOR_RED);
 
         gfx_update();
+
+#if CONFIGURATION != RELEASE
         frame_data_log_fps();
+#endif
+
     }
 
     return 0;
