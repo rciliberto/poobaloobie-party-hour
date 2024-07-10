@@ -68,7 +68,7 @@ Usage:
 
 
 
-#define QUADS_PER_BLOCK 1024
+#define QUADS_PER_BLOCK 256
 typedef struct Draw_Quad {
 	Vector2 bottom_left, top_left, top_right, bottom_right;
 	// r, g, b, a
@@ -82,12 +82,16 @@ typedef struct Draw_Quad {
 	Gfx_Filter_Mode image_min_filter;
 	Gfx_Filter_Mode image_mag_filter;
 	
+	float32 z;
+	
 } Draw_Quad;
 
 
 typedef struct Draw_Quad_Block {
 	Draw_Quad quad_buffer[QUADS_PER_BLOCK];
 	u64 num_quads;
+	
+	float32 low_z, high_z;
 	
 	struct Draw_Quad_Block *next;
 } Draw_Quad_Block;
@@ -103,6 +107,8 @@ typedef struct Draw_Frame {
 	
 	Matrix4 projection;
 	Matrix4 view;
+	
+	bool enable_z_sorting;
 } Draw_Frame;
 // This frame is passed to the platform layer and rendered in os_update.
 // Resets every frame.
@@ -111,13 +117,14 @@ Draw_Frame draw_frame = ZERO(Draw_Frame);
 void reset_draw_frame(Draw_Frame *frame) {
 	*frame = (Draw_Frame){0};
 	
-	frame->current = &first_block;
-	frame->current->num_quads = 0;
+	frame->current = 0;
 	
 	float32 aspect = (float32)window.width/(float32)window.height;
 	
 	frame->projection = m4_make_orthographic_projection(-aspect, aspect, -1, 1, -1, 10);
 	frame->view = m4_scalar(1.0);
+	
+	frame->num_blocks = 0;
 }
 
 Draw_Quad *draw_quad_projected(Draw_Quad quad, Matrix4 world_to_clip) {
@@ -127,11 +134,15 @@ Draw_Quad *draw_quad_projected(Draw_Quad quad, Matrix4 world_to_clip) {
 	quad.bottom_right = m4_transform(world_to_clip, v4(v2_expand(quad.bottom_right), 0, 1)).xy;
 	
 	quad.image_min_filter = GFX_FILTER_MODE_NEAREST;
-	quad.image_min_filter = GFX_FILTER_MODE_NEAREST;
+	quad.image_mag_filter = GFX_FILTER_MODE_NEAREST;
 
-	if (!draw_frame.current) draw_frame.current = &first_block;
-	
-	if (draw_frame.current == &first_block)  draw_frame.num_blocks = 1;
+	if (!draw_frame.current) {
+		draw_frame.current = &first_block;
+		draw_frame.current->low_z = F32_MAX;
+		draw_frame.current->high_z = F32_MIN;
+		draw_frame.current->num_quads = 0;
+		draw_frame.num_blocks = 1;
+	}
 	
 	assert(draw_frame.current->num_quads <= QUADS_PER_BLOCK);
 	
@@ -144,8 +155,11 @@ Draw_Quad *draw_quad_projected(Draw_Quad quad, Matrix4 world_to_clip) {
 		
 		draw_frame.current = draw_frame.current->next;
 		draw_frame.current->num_quads = 0;
+		draw_frame.current->low_z = F32_MAX;
+		draw_frame.current->high_z = F32_MIN;
 		
 		draw_frame.num_blocks += 1;
+		
 	}
 	
 	draw_frame.current->quad_buffer[draw_frame.current->num_quads] = quad;
@@ -255,6 +269,14 @@ void draw_text(Gfx_Font *font, string text, u32 raster_height, Vector2 position,
 	xform         = m4_translate(xform, v3(position.x, position.y, 0));
 	
 	draw_text_xform(font, text, raster_height, xform, scale, color);
+}
+Gfx_Text_Metrics draw_text_and_measure(Gfx_Font *font, string text, u32 raster_height, Vector2 position, Vector2 scale, Vector4 color) {
+	Matrix4 xform = m4_scalar(1.0);
+	xform         = m4_translate(xform, v3(position.x, position.y, 0));
+	
+	draw_text_xform(font, text, raster_height, xform, scale, color);
+	
+	return measure_text(font, text, raster_height, scale);
 }
 
 

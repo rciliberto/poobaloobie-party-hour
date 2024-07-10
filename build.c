@@ -29,12 +29,8 @@ typedef struct Context_Extra {
 // #include "oogabooga/examples/minimal_game_loop.c"
 
 // #include "oogabooga/examples/text_rendering.c"
-
-// An engine dev stress test for rendering
+// #include "oogabooga/examples/custom_logger.c"
 // #include "oogabooga/examples/renderer_stress_test.c"
-
-// Randy's example game that he's building out as a tutorial for using the engine
-// #include "entry_randygame.c"
 
 // This is where you swap in your own project!
 #include "src/entry_pbh.c"

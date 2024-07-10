@@ -107,7 +107,7 @@
 
 #define OGB_VERSION_MAJOR 0
 #define OGB_VERSION_MINOR 0
-#define OGB_VERSION_PATCH 2
+#define OGB_VERSION_PATCH 4
 
 #define OGB_VERSION (OGB_VERSION_MAJOR*1000000+OGB_VERSION_MINOR*1000+OGB_VERSION_PATCH)
 
@@ -135,9 +135,13 @@ typedef double f64;
 typedef f32 float32;
 typedef f64 float64;
 
+#define F32_MAX 3.402823466e+38F
+#define F32_MIN 1.175494351e-38F
+
 typedef u8 bool;
 #define false 0
 #define true 1
+
 
 // Determine what compiler we are on
 #ifdef __clang__
@@ -152,7 +156,6 @@ typedef u8 bool;
 #endif
 
 #define DEBUG 0
-#define VERY_DEBUG 1
 #define RELEASE 2
 
 #if defined(NDEBUG)
@@ -262,11 +265,14 @@ typedef u8 bool;
 #include "hash.c"
 #include "path_utils.c"
 #include "linmath.c"
+#include "range.c"
 
 #include "hash_table.c"
 
 #include "os_interface.c"
+#include "concurrency.c"
 #include "gfx_interface.c"
+
 #include "font.c"
 
 #include "profiling.c"
@@ -274,7 +280,10 @@ typedef u8 bool;
 #include "color.c"
 #include "memory.c"
 #include "input.c"
+
 #include "drawing.c"
+
+#include "audio.c"
 
 // #Portability
 #if GFX_RENDERER == GFX_RENDERER_D3D11
@@ -311,6 +320,7 @@ void oogabooga_init(u64 program_memory_size) {
 	os_init(program_memory_size);
 	heap_init();
 	temporary_storage_init();
+	log_info("Ooga booga version is %d.%02d.%03d", OGB_VERSION_MAJOR, OGB_VERSION_MINOR, OGB_VERSION_PATCH);
 	gfx_init();
 	log_verbose("CPU has sse1: %cs", features.sse1 ? "true" : "false");
 	log_verbose("CPU has sse2: %cs", features.sse2 ? "true" : "false");
@@ -329,7 +339,7 @@ int main(int argc, char **argv) {
 
 	print("Ooga booga program started\n");
 	oogabooga_init(INITIAL_PROGRAM_MEMORY_SIZE); 
-	log_info("Ooga booga version is %d.%02d.%03d", OGB_VERSION_MAJOR, OGB_VERSION_MINOR, OGB_VERSION_PATCH);
+	
 	
 	assert(main != ENTRY_PROC, "You've ooga'd your last booga");
 	

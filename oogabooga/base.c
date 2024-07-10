@@ -65,7 +65,9 @@ typedef enum Log_Level {
 	LOG_ERROR,
 	LOG_INFO,
 	LOG_WARNING,
-	LOG_VERBOSE
+	LOG_VERBOSE,
+	
+	LOG_LEVEL_COUNT,
 } Log_Level;
 
 
@@ -75,8 +77,12 @@ typedef struct Allocator {
 	void *data;	
 } Allocator;
 
+Allocator get_heap_allocator();
+
 typedef struct Context {
 	void *logger; // void(*Logger_Proc)(Log_Level level, string fmt, ...)
+	
+	u64 thread_id;
 	
 	CONTEXT_EXTRA extra;
 } Context;

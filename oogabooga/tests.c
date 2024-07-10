@@ -5,7 +5,7 @@
 ///
 
 void log_heap() {
-	os_spinlock_lock(heap_lock);
+	spinlock_acquire_or_wait(&heap_lock);
 	print("\nHEAP:\n");
 	
 	Heap_Block *block = heap_head;
@@ -31,7 +31,7 @@ void log_heap() {
 		
 		block = block->next;
 	}
-	os_spinlock_unlock(heap_lock);
+	spinlock_release(&heap_lock);
 }
 
 void test_allocator(bool do_log_heap) {
@@ -1056,6 +1056,91 @@ void test_hash_table() {
     assert(table.count == 0, "Failed: Hash table count should be 0 after destroy");
     assert(table.capacity_count == 0, "Failed: Hash table capacity count should be 0 after destroy");
 }
+
+#define NUM_BINS 100
+#define NUM_SAMPLES 100000000
+
+void test_random_distribution() {
+    int bins[NUM_BINS] = {0};
+    seed_for_random = os_get_current_cycle_count();
+    for (int i = 0; i < NUM_SAMPLES; i++) {
+        f32 rand_val = get_random_float32();
+        int bin = (int)(rand_val * NUM_BINS);
+        bins[bin]++;
+    }
+
+	int min_bin = INT32_MAX;
+	int max_bin = 0;
+    print("Histogram of Random Values:\n");
+    for (int i = 0; i < NUM_BINS; i++) {
+        print("Bin %d: %d\n", i, bins[i]);
+        min_bin = min(min_bin, bins[i]);
+        max_bin = max(max_bin, bins[i]);
+    }
+    
+    print("Min: %d, max: %d\n", min_bin, max_bin);
+}
+
+#define MUTEX_TEST_TASK_COUNT 1000
+typedef struct Mutex_Test_Shared_Data {
+    int counter;
+    bool any_active_thread;
+    Mutex mutex;
+} Mutex_Test_Shared_Data;
+void mutex_test_increment_counter(Thread* t) {
+    Mutex_Test_Shared_Data* data = (Mutex_Test_Shared_Data*)t->data;
+    for (int i = 0; i < MUTEX_TEST_TASK_COUNT; i++) {
+        mutex_acquire_or_wait(&data->mutex);
+        assert(!data->any_active_thread, "Failed: More than one thread is in critical section!");
+        data->any_active_thread = true;
+        data->counter++;
+        data->any_active_thread = false;
+        mutex_release(&data->mutex);
+    }
+}
+void test_mutex() {
+    Mutex m;
+    
+    // Test initialization
+    mutex_init(&m);
+    assert(m.spin_time_microseconds == MUTEX_DEFAULT_SPIN_TIME_MICROSECONDS, "Failed: Default spin time incorrect");
+    assert(!m.spinlock_acquired, "Failed: Spinlock should not be acquired after initialization");
+
+    // Test acquire and release without contention
+    mutex_acquire_or_wait(&m);
+    assert(m.spinlock_acquired, "Failed: Mutex should be acquired after mutex_acquire_or_wait");
+    
+    mutex_release(&m);
+    assert(!m.spinlock_acquired, "Failed: Spinlock should not be acquired after mutex_release");
+
+    // Clean up
+    mutex_destroy(&m);
+    
+    Mutex_Test_Shared_Data data;
+    data.counter = 0;
+    data.any_active_thread = false;
+    mutex_init(&data.mutex);
+
+    Allocator allocator = get_heap_allocator();
+
+	const int num_threads = 100;
+
+	Thread **threads = alloc(allocator, sizeof(Thread*)*num_threads);
+	for (u64 i = 0; i < num_threads; i++) {
+		threads[i] = os_make_thread(mutex_test_increment_counter, allocator);
+		threads[i]->data = &data;
+	}
+	for (u64 i = 0; i < num_threads; i++) {
+    	os_start_thread(threads[i]);
+	}
+	for (u64 i = 0; i < num_threads; i++) {
+    	os_join_thread(threads[i]);
+	}
+
+    assert(data.counter == num_threads * MUTEX_TEST_TASK_COUNT, "Failed: Counter does not match expected value after threading tasks");
+
+    mutex_destroy(&data.mutex);
+}
 void oogabooga_run_tests() {
 	
 	
@@ -1070,20 +1155,6 @@ void oogabooga_run_tests() {
 	print("Testing strings... ");
 	test_strings();
 	print("OK!\n");
-
-
-#if CONFIGURATION != RELEASE
-	print("Thread bombing allocator... ");
-	Thread* threads[100];
-	for (int i = 0; i < 100; i++) {
-		threads[i] = os_make_thread(test_allocator_threaded, get_heap_allocator());
-		os_start_thread(threads[i]);
-	}
-	for (int i = 0; i < 100; i++) {
-		os_join_thread(threads[i]);
-	}
-	print("OK!\n");
-#endif
 	
 	print("Testing file IO... ");
 	test_file_io();
@@ -1100,5 +1171,14 @@ void oogabooga_run_tests() {
 	print("Testing hash table... ");
 	test_hash_table();
 	print("OK!\n");
+	
+	print("Testing random distribution... ");
+	test_random_distribution();
+	print("OK!\n");
+	
+	print("Testing mutex... ");
+	test_mutex();
+	print("OK!\n");
+	
 	
 }

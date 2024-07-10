@@ -23,7 +23,7 @@ int entry(int argc, char **argv) {
 		// as it was rasterized at with no down- or up-scaling.
 		// It's fairly common in video games to render the UI with a separate projection for this
 		// very reason.
-		draw_frame.projection = m4_make_orthographic_projection(window.pixel_width * -0.5, window.pixel_width * 0.5, window.height * -0.5, window.height * 0.5, -1, 10);
+		draw_frame.projection = m4_make_orthographic_projection(window.pixel_width * -0.5, window.pixel_width * 0.5, window.pixel_height * -0.5, window.pixel_height * 0.5, -1, 10);
 		
 		// Easy drop shadow: Just draw the same text underneath with a slight offset
 		draw_text(font, STR("I am text"), font_height, v2(-2, 2), v2(1, 1), COLOR_BLACK);
@@ -51,7 +51,7 @@ int entry(int argc, char **argv) {
 		
 		// If for example we wanted to center the text, we would do the same but then add
 		// the text size divided by two:
-		// justified = v2_add(justified, v2_subf(hello_metrics.functional_size, 2.0));
+		// justified = v2_add(justified, v2_divf(hello_metrics.functional_size, 2.0));
 		
 		local_persist bool show_bounds = false;
 		if (is_key_just_pressed('E')) show_bounds = !show_bounds;
