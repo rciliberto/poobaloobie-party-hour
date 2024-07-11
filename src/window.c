@@ -17,7 +17,7 @@ void window_init() {
  * Update frame properties. Set frame projection and scale.
  */
 void window_frame_update() {
-    draw_frame.projection = m4_make_orthographic_projection(window.width * -0.5, window.width * 0.5, window.height * -0.5, window.height * 0.5, -1, 10);
+	draw_frame.projection = m4_make_orthographic_projection(window.pixel_width * -0.5, window.pixel_width * 0.5, window.pixel_height * -0.5, window.pixel_height * 0.5, -1, 10);
     float zoom = 1;
     draw_frame.view = m4_make_scale(v3(1.0/zoom, 1.0/zoom, 1.0));
 }
