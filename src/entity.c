@@ -1,18 +1,18 @@
-#define MAX_ENTITY_TYPES 128
-
 /**
  * The type of entity that an entity represents.
  */
 typedef enum EntityType {
-    poobaloobie = 0,
-    balloon = 1,
-    punch_table = 2,
+    entity_null,
+    entity_poobaloobie = 1,
+    entity_balloon = 2,
+    entity_punch_table = 3,
+    ENTITY_MAX
 } EntityType;
 
 /**
  * Buffer of entity graphics assets. Indexed according to EntityType
  */
-Gfx_Image *entity_gfx[MAX_ENTITY_TYPES];
+const Gfx_Image *entity_gfx[ENTITY_MAX];
 
 /**
  * An entity that can be rendered into the scene
@@ -36,12 +36,23 @@ void init_entity_gfx() {
         "assets/dev_punch_table.png",
     };
 
-    // Load graphics and place in graphics buffer
     const Allocator allocator = get_heap_allocator();
+
+    // Load missing texture
+    const char *missing_texture_uri = "assets/missing_texture.png";
+    const Gfx_Image *missing_texture = load_image_from_disk(STR(missing_texture_uri), allocator);
+    assert(missing_texture, "Failed to load missing_texture from disk at %s", missing_texture_uri);
+
+    // Set all textures to missing texture
     for (int i = 0; i < sizeof(image_uris) / sizeof(char *); i++) {
-        entity_gfx[i] = load_image_from_disk(STR(image_uris[i]), allocator);
-        assert(entity_gfx[i], "Failed to load asset from disk %s", image_uris[i]);
+        entity_gfx[i] = missing_texture;
     }
+
+    // Load graphics and place in graphics buffer
+    // This is explicitly done for each asset for now
+    entity_gfx[entity_poobaloobie] = load_image_from_disk(STR("assets/dev_poobaloobie.png"), allocator);
+    entity_gfx[entity_balloon] = load_image_from_disk(STR("assets/dev_balloon.png"), allocator);
+    entity_gfx[entity_punch_table] = load_image_from_disk(STR("assets/dev_punch_table.png"), allocator);
 }
 
 /**
@@ -54,7 +65,6 @@ void draw_entity(const Entity *entity) {
     }
 
     Matrix4 xform = m4_scalar(1.0);
-    xform         = m4_rotate_z(xform, frame_data.now);
     xform         = m4_translate(xform, v3(entity->position.x, entity->position.y, 0));
     draw_image_xform(entity_gfx[entity->type], xform, entity->size, COLOR_WHITE);
 }
