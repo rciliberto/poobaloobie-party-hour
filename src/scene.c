@@ -10,13 +10,8 @@ typedef struct Scene {
  * Draw the background in the center of the window. Scale appropriately based on window aspect ratio.
  */
 void scene_draw_background(const Scene *scene) {
-    if ((float64) window.width / window.height > ASPECT_RATIO) {
-        draw_image(scene->background_image, v2(window.height * -0.5 * ASPECT_RATIO, window.height * -0.5),
-                   v2(window.height * ASPECT_RATIO, window.height), COLOR_WHITE);
-    } else {
-        draw_image(scene->background_image, v2(window.width * -0.5, window.width * -0.5 * (1 / ASPECT_RATIO)),
-                   v2(window.width, window.width * (1 / ASPECT_RATIO)), COLOR_WHITE);
-    }
+    draw_image(scene->background_image, v2(VIEW_WIDTH * -0.5, VIEW_HEIGHT * -0.5),
+        v2(VIEW_WIDTH, VIEW_HEIGHT), COLOR_WHITE);
 }
 
 /**
