@@ -17,7 +17,7 @@ Scene *init_gymnasium_scene() {
 
     gymnasium_scene.entities[0] = (Entity) {
         .valid = true,
-        .type = poobaloobie,
+        .type = entity_balloon,
         .position = v2(-250, -250),
         .size = v2(500,500),
         .visible = true

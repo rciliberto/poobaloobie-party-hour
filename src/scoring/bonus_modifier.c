@@ -1,0 +1,1 @@
+typedef float64 (*BonusModifier)(const ScoringContext *context);
