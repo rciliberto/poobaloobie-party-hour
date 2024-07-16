@@ -37,13 +37,26 @@ int entry(int argc, char **argv) {
 
         scene_draw_background(scene);
         scene_draw_entities(scene);
-        draw_text(font, sprintf(get_heap_allocator(), "Party Points: %.2f", scoring_context->party_points), 32, v2(0, 0), v2(1, 1), COLOR_BLACK);
+        draw_text(font, sprintf(get_heap_allocator(), "Party Points: %.2f", scoring_context->party_points), 32, v2(0, 0), v2(1, 1), COLOR_BLUE);
 
 
         gfx_update();
 
         if (is_key_just_released('P')) {
             frame_data_log_fps();
+        }
+
+        if (is_key_down('A')) {
+            scene->entities[0].position.x -= 30 * frame_data.delta_t;
+        }
+        if (is_key_down('D')) {
+            scene->entities[0].position.x += 30 * frame_data.delta_t;
+        }
+        if (is_key_down('S')) {
+            scene->entities[0].position.y -= 30 * frame_data.delta_t;
+        }
+        if (is_key_down('W')) {
+            scene->entities[0].position.y += 30 * frame_data.delta_t;
         }
     }
 

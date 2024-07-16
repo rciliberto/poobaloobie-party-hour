@@ -17,9 +17,9 @@ Scene *init_gymnasium_scene() {
 
     gymnasium_scene.entities[0] = (Entity) {
         .valid = true,
-        .type = entity_poobaloobie,
-        .position = v2(-250, -250),
-        .size = v2(500,500),
+        .type = entity_null,
+        .position = v2(-16, -16),
+        .size = v2(32,32),
         .visible = true
     };
 

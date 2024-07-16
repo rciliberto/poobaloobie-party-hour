@@ -12,7 +12,7 @@ typedef enum EntityType {
 /**
  * Buffer of entity graphics assets. Indexed according to EntityType
  */
-const Gfx_Image *entity_gfx[ENTITY_MAX];
+Gfx_Image *entity_gfx[ENTITY_MAX];
 
 /**
  * An entity that can be rendered into the scene
@@ -40,7 +40,7 @@ void init_entity_gfx() {
 
     // Load missing texture
     const char *missing_texture_uri = "assets/missing_texture.png";
-    const Gfx_Image *missing_texture = load_image_from_disk(STR(missing_texture_uri), allocator);
+    Gfx_Image *missing_texture = load_image_from_disk(STR(missing_texture_uri), allocator);
     assert(missing_texture, "Failed to load missing_texture from disk at %s", missing_texture_uri);
 
     // Set all textures to missing texture
@@ -65,6 +65,6 @@ void draw_entity(const Entity *entity) {
     }
 
     Matrix4 xform = m4_scalar(1.0);
-    xform         = m4_translate(xform, v3(entity->position.x, entity->position.y, 0));
+    xform         = m4_translate(xform, v3(floorl(entity->position.x), floorl(entity->position.y), 0));
     draw_image_xform(entity_gfx[entity->type], xform, entity->size, COLOR_WHITE);
 }

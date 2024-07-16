@@ -1,13 +1,13 @@
-#define VIEW_ASPECT (16.0 / 9.0)
 #define VIEW_HEIGHT 480.0
-#define VIEW_WIDTH (VIEW_HEIGHT * VIEW_ASPECT)
+#define VIEW_WIDTH 854.0
+#define VIEW_ASPECT (VIEW_WIDTH / VIEW_HEIGHT)
 
 /**
  * Initialize the window on program launch. Set things like width, height, and load data from disk.
  */
 void window_init() {
     window.title = STR("Poobaloobie Party Hour");
-    window.width = VIEW_HEIGHT * VIEW_ASPECT;
+    window.width = VIEW_WIDTH;
     window.height = VIEW_HEIGHT;
     window.x = 200;
     window.y = 200;
