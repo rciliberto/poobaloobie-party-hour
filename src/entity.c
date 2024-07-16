@@ -21,7 +21,6 @@ typedef struct Entity {
     bool valid;
     EntityType type;
     Vector2 position;
-    Vector2 size;
     bool visible;
 } Entity;
 
@@ -64,7 +63,9 @@ void draw_entity(const Entity *entity) {
         return;
     }
 
+    Gfx_Image *gfx_image = entity_gfx[entity->type];
+
     Matrix4 xform = m4_scalar(1.0);
     xform         = m4_translate(xform, v3(floorl(entity->position.x), floorl(entity->position.y), 0));
-    draw_image_xform(entity_gfx[entity->type], xform, entity->size, COLOR_WHITE);
+    draw_image_xform(gfx_image, xform, v2(gfx_image->width, gfx_image->height), COLOR_WHITE);
 }

@@ -19,7 +19,6 @@ Scene *init_gymnasium_scene() {
         .valid = true,
         .type = entity_null,
         .position = v2(-16, -16),
-        .size = v2(32,32),
         .visible = true
     };
 
