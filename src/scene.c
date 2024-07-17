@@ -4,6 +4,7 @@ typedef struct Scene {
     /** image used for the background of the scene */
     Gfx_Image *background_image;
     Entity entities[MAX_SCENE_ENTITIES];
+    ScoringContext scoring_context;
 } Scene;
 
 /**

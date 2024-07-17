@@ -1,29 +1,24 @@
 #include "window.c"
 #include "frame_timing.c"
+#include "scoring/scoring.c"
 #include "entity.c"
 #include "scene.c"
 #include "scenes/gymnasium.c"
-#include "scoring/scoring.c"
 
 Scene *scene;
-ScoringContext *scoring_context;
 
 int entry(int argc, char **argv) {
+    Allocator allocator = get_heap_allocator();
     window_init();
 
     init_entity_gfx();
     frame_data_initialize();
-    scene = init_gymnasium_scene();
 
-    Gfx_Font *font = load_font_from_disk(STR("C:/windows/fonts/arial.ttf"), get_heap_allocator());
+    scene = alloc(allocator, sizeof(Scene));
+    init_gymnasium_scene(scene);
+
+    Gfx_Font *font = load_font_from_disk(STR("C:/windows/fonts/arial.ttf"), allocator);
     assert(font, "Failed loading arial.ttf, %d", GetLastError());
-
-    scoring_context = alloc(get_heap_allocator(), sizeof(ScoringContext));
-    scoring_context->party_points = 0;
-    scoring_context->party_power = 1.0;
-    scoring_context->score_sources[0].valid = true;
-    scoring_context->score_sources[0].number_held = 50;
-    scoring_context->score_sources[0].points_per_second = 1;
 
     while (!window.should_close) {
         reset_temporary_storage();
@@ -32,12 +27,15 @@ int entry(int argc, char **argv) {
         os_update();
 
         if (frame_data.fixed_update_counter == 0) {
-            scoring_context->party_points += total_score_contribution(scoring_context) * FIXED_UPDATE_RATE;
+            scene->scoring_context.party_points += total_score_contribution(&scene->scoring_context) *
+                    FIXED_UPDATE_RATE;
         }
 
         scene_draw_background(scene);
         scene_draw_entities(scene);
-        draw_text(font, sprintf(get_heap_allocator(), "Party Points: %.2f", scoring_context->party_points), 32, v2(0, 0), v2(1, 1), COLOR_BLUE);
+        // ui_draw();
+        draw_text(font, sprintf(allocator, "Party Points: %.2f", scene->scoring_context.party_points), 16, v2(0, 0),
+                  v2(2, 2), COLOR_BLUE);
 
 
         gfx_update();

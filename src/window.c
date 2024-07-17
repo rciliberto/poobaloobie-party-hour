@@ -1,5 +1,5 @@
-#define VIEW_HEIGHT 480.0
-#define VIEW_WIDTH 854.0
+#define VIEW_HEIGHT 720.0
+#define VIEW_WIDTH 1280.0
 #define VIEW_ASPECT (VIEW_WIDTH / VIEW_HEIGHT)
 
 /**
