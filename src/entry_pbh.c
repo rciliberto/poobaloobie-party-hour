@@ -34,14 +34,40 @@ int entry(int argc, char **argv) {
         scene_draw_background(scene);
         scene_draw_entities(scene);
         // ui_draw();
-        draw_text(font, sprintf(allocator, "Party Points: %.2f", scene->scoring_context.party_points), 16, v2(0, 0),
+        draw_text(font, sprintf(allocator, "Party Points: %.2f", scene->scoring_context.party_points), 16, v2(-150, 270),
                   v2(2, 2), COLOR_BLUE);
 
 
         gfx_update();
 
-        if (is_key_just_released('P')) {
+        if (is_key_just_pressed('F')) {
             frame_data_log_fps();
+        }
+
+        if (is_key_just_pressed('P')) {
+            for (int i = 0; i < MAX_SCENE_ENTITIES; i++) {
+                Entity *e = &scene->entities[i];
+                if (!e->valid) {
+                    break;
+                }
+
+                if (e->type == entity_punch_table) {
+                    e->visible = !e->visible;
+                }
+            }
+        }
+
+        if (is_key_just_pressed('B')) {
+            for (int i = 0; i < MAX_SCENE_ENTITIES; i++) {
+                Entity *e = &scene->entities[i];
+                if (!e->valid) {
+                    break;
+                }
+
+                if (e->type == entity_balloon) {
+                    e->visible = !e->visible;
+                }
+            }
         }
 
         if (is_key_down('A')) {
@@ -55,6 +81,16 @@ int entry(int argc, char **argv) {
         }
         if (is_key_down('W')) {
             scene->entities[0].position.y += 30 * frame_data.delta_t;
+        }
+
+        if (is_key_just_pressed('1')) {
+            scene->scoring_context.score_sources[0].number_held++;
+        }
+        if (is_key_just_pressed('2')) {
+            scene->scoring_context.score_sources[1].number_held++;
+        }
+        if (is_key_just_pressed('3')) {
+            scene->scoring_context.score_sources[2].number_held++;
         }
     }
 

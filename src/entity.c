@@ -28,13 +28,6 @@ typedef struct Entity {
  * Initialize and load entity graphics from the disk.
  */
 void init_entity_gfx() {
-    // Assets to load
-    const char *image_uris[] = {
-        "assets/dev_poobaloobie.png",
-        "assets/dev_balloon.png",
-        "assets/dev_punch_table.png",
-    };
-
     const Allocator allocator = get_heap_allocator();
 
     // Load missing texture
@@ -43,15 +36,15 @@ void init_entity_gfx() {
     assert(missing_texture, "Failed to load missing_texture from disk at %s", missing_texture_uri);
 
     // Set all textures to missing texture
-    for (int i = 0; i < sizeof(image_uris) / sizeof(char *); i++) {
+    for (int i = 0; i < ENTITY_MAX / sizeof(char *); i++) {
         entity_gfx[i] = missing_texture;
     }
 
     // Load graphics and place in graphics buffer
     // This is explicitly done for each asset for now
     entity_gfx[entity_poobaloobie] = load_image_from_disk(STR("assets/dev_poobaloobie.png"), allocator);
-    entity_gfx[entity_balloon] = load_image_from_disk(STR("assets/dev_balloon.png"), allocator);
-    entity_gfx[entity_punch_table] = load_image_from_disk(STR("assets/dev_punch_table.png"), allocator);
+    entity_gfx[entity_balloon] = load_image_from_disk(STR("assets/dev_balloon_16w.png"), allocator);
+    entity_gfx[entity_punch_table] = load_image_from_disk(STR("assets/dev_punch_table_128w.png"), allocator);
 }
 
 /**

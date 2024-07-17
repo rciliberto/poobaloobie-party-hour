@@ -8,29 +8,73 @@ void init_gymnasium_scene(Scene *scene) {
 
     const Allocator allocator = get_heap_allocator();
 
-    if (scene->background_image == NULL) {
-        scene->background_image = load_image_from_disk(STR("assets/dev_background_720p.png"), allocator);
-        assert(scene->background_image, "Gymnasium background image failed to load");
+    // Deallocate previous data
+    if (scene->background_image != NULL) {
+        dealloc(allocator, scene->background_image);
     }
 
-    memset(scene->entities, 0, sizeof(Entity) * ENTITY_MAX);
+    Gfx_Image *background = load_image_from_disk(STR("assets/dev_background_720p.png"), allocator);
+    assert(background, "Gymnasium background image failed to load");
 
-    scene->entities[0] = (Entity) {
-        .valid = true,
-        .type = entity_poobaloobie,
-        .position = v2(-16, -16),
-        .visible = true
-    };
-
-
-    scene->scoring_context = (ScoringContext) {
-        .party_points = 0,
-        .party_power = 1.0,
-        .score_sources = {
-            (ScoreSource) {
+    *scene = (Scene) {
+        .background_image = background,
+        .entities = {
+            (Entity) {
                 .valid = true,
-                .number_held = 50,
-                .points_per_second = 1,
+                .type = entity_poobaloobie,
+                .position = v2(-150, -300),
+                .visible = true
+            },
+            (Entity) {
+                .valid = true,
+                .type = entity_balloon,
+                .position = v2(-300, 25),
+                .visible = true
+            },
+            (Entity) {
+                .valid = true,
+                .type = entity_balloon,
+                .position = v2(-150, 50),
+                .visible = true
+            },
+            (Entity) {
+                .valid = true,
+                .type = entity_balloon,
+                .position = v2(150, -20),
+                .visible = true
+            },
+            (Entity) {
+                .valid = true,
+                .type = entity_balloon,
+                .position = v2(300, -60),
+                .visible = true
+            },
+            (Entity) {
+                .valid = true,
+                .type = entity_punch_table,
+                .position = v2(300, -250),
+                .visible = false
+            },
+        },
+        .scoring_context = (ScoringContext) {
+            .party_points = 0,
+            .party_power = 1.0,
+            .score_sources = {
+                (ScoreSource) {
+                    .valid = true,
+                    .number_held = 0,
+                    .points_per_second = 1,
+                },
+                (ScoreSource) {
+                    .valid = true,
+                    .number_held = 0,
+                    .points_per_second = 100,
+                },
+                (ScoreSource) {
+                    .valid = true,
+                    .number_held = 0,
+                    .points_per_second = 1000,
+                }
             }
         }
     };
