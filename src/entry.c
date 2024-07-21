@@ -1,14 +1,14 @@
-#include "window.c"
-#include "frame_timing.c"
+#include "core/window.c"
+#include "core/frame_timing.c"
 #include "scoring/scoring.c"
 #include "entity.c"
-#include "scene.c"
-#include "scenes/gymnasium.c"
+#include "scene/scene.c"
+#include "scene/scenes/gymnasium.c"
 
 Scene *scene;
 
 int entry(int argc, char **argv) {
-    Allocator allocator = get_heap_allocator();
+    const Allocator allocator = get_heap_allocator();
     window_init();
 
     init_entity_gfx();
@@ -34,7 +34,7 @@ int entry(int argc, char **argv) {
         scene_draw_background(scene);
         scene_draw_entities(scene);
         // ui_draw();
-        draw_text(font, sprintf(allocator, "Party Points: %.2f", scene->scoring_context.party_points), 16, v2(-150, 270),
+        draw_text(font, sprintf(temp, "Party Points: %.2f", scene->scoring_context.party_points), 16, v2(-150, 270),
                   v2(2, 2), COLOR_BLUE);
 
 
