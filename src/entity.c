@@ -10,7 +10,7 @@ typedef enum EntityType {
 } EntityType;
 
 /**
- * Buffer of entity graphics assets. Indexed according to EntityType
+ * Buffer of entity graphics res. Indexed according to EntityType
  */
 Gfx_Image *entity_gfx[ENTITY_MAX];
 
@@ -31,7 +31,7 @@ void init_entity_gfx() {
     const Allocator allocator = get_heap_allocator();
 
     // Load missing texture
-    const char *missing_texture_uri = "assets/missing_texture.png";
+    const char *missing_texture_uri = "res/missing_texture.png";
     Gfx_Image *missing_texture = load_image_from_disk(STR(missing_texture_uri), allocator);
     assert(missing_texture, "Failed to load missing_texture from disk at %s", missing_texture_uri);
 
@@ -42,9 +42,9 @@ void init_entity_gfx() {
 
     // Load graphics and place in graphics buffer
     // This is explicitly done for each asset for now
-    entity_gfx[entity_poobaloobie] = load_image_from_disk(STR("assets/dev_poobaloobie.png"), allocator);
-    entity_gfx[entity_balloon] = load_image_from_disk(STR("assets/dev_balloon_16w.png"), allocator);
-    entity_gfx[entity_punch_table] = load_image_from_disk(STR("assets/dev_punch_table_128w.png"), allocator);
+    entity_gfx[entity_poobaloobie] = load_image_from_disk(STR("res/dev_poobaloobie.png"), allocator);
+    entity_gfx[entity_balloon] = load_image_from_disk(STR("res/dev_balloon_16w.png"), allocator);
+    entity_gfx[entity_punch_table] = load_image_from_disk(STR("res/dev_punch_table_128w.png"), allocator);
 }
 
 /**

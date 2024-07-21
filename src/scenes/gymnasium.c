@@ -13,7 +13,7 @@ void init_gymnasium_scene(Scene *scene) {
         dealloc(allocator, scene->background_image);
     }
 
-    Gfx_Image *background = load_image_from_disk(STR("assets/dev_background_720p.png"), allocator);
+    Gfx_Image *background = load_image_from_disk(STR("res/dev_background_720p.png"), allocator);
     assert(background, "Gymnasium background image failed to load");
 
     *scene = (Scene) {

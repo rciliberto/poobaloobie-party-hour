@@ -18,7 +18,7 @@ int entry(int argc, char **argv) {
     init_gymnasium_scene(scene);
 
     Gfx_Font *font = load_font_from_disk(STR("C:/windows/fonts/arial.ttf"), allocator);
-    assert(font, "Failed loading arial.ttf, %d", GetLastError());
+    assert(font, "Failed loading arial.ttf, %lu", GetLastError());
 
     while (!window.should_close) {
         reset_temporary_storage();
