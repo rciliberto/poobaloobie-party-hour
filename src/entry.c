@@ -27,14 +27,14 @@ int entry(int argc, char **argv) {
         os_update();
 
         if (frame_data.fixed_update_counter == 0) {
-            scene->scoring_context.party_points += total_score_contribution(&scene->scoring_context) *
-                    FIXED_UPDATE_RATE;
+            scene->scoring_context.party_points +=
+                total_score_contribution(&scene->scoring_context) * FIXED_UPDATE_RATE;
         }
 
         scene_draw_background(scene);
         scene_draw_entities(scene);
         // ui_draw();
-        draw_text(font, sprintf(temp, "Party Points: %.2f", scene->scoring_context.party_points), 16, v2(-150, 270),
+        draw_text(font, sprintf(temp_allocator, "Party Points: %.2f", scene->scoring_context.party_points), 16, v2(-150, 270),
                   v2(2, 2), COLOR_BLUE);
 
 
