@@ -4,6 +4,7 @@
 #include "entity.c"
 #include "scene/scene.c"
 #include "scene/scenes/gymnasium.c"
+#include "user_interface/user_interface.c"
 
 Scene *scene;
 
